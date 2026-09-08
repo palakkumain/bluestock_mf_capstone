@@ -1,236 +1,291 @@
-# BlueStock Fintech – Mutual Fund Analytics
+# Mutual Fund Analytics — BlueStock Fintech Capstone
 
 ## Project Overview
 
-This project is part of the BlueStock Fintech Mutual Fund Analytics Capstone. It covers the end-to-end analysis of mutual fund data, including data cleaning, database design, SQL analytics, fund performance evaluation, risk-adjusted performance analysis, and benchmark comparison.
+This project focuses on analyzing mutual fund data to understand fund performance, investor behavior, asset growth, SIP trends, portfolio allocation, and market trends.
 
-The project combines Python, Pandas, NumPy, SQLite, SQLAlchemy, SciPy, and data visualization techniques to derive meaningful insights from mutual fund datasets.
+The project was completed as part of the **BlueStock Fintech Capstone Project**.
 
 ## Objectives
 
-- Clean and validate mutual fund datasets
-- Standardize date, NAV, and transaction formats
-- Handle missing values and duplicate records
-- Design and build a SQLite database using a star schema
-- Write analytical SQL queries for mutual fund and SIP analysis
-- Calculate daily fund returns
-- Calculate 1-year and 3-year CAGR
-- Evaluate Sharpe and Sortino ratios
-- Calculate Alpha and Beta against the NIFTY 100
-- Calculate Maximum Drawdown and identify the worst drawdown period
-- Develop a 0–100 mutual fund performance scorecard
-- Compare top-performing funds against NIFTY 50 and NIFTY 100
-- Calculate benchmark tracking error
-- Generate analytical outputs and visualizations
+- Analyze NAV trends across mutual fund schemes
+- Study AUM growth by fund house
+- Analyze monthly SIP inflows and SIP growth
+- Examine category-wise mutual fund inflows
+- Understand investor demographics
+- Analyze geographic distribution of investors
+- Track mutual fund folio growth
+- Study correlations between fund returns
+- Analyze sector allocation across equity fund holdings
+- Generate key insights through Exploratory Data Analysis (EDA)
+
+## Dataset
+
+The project uses the following datasets:
+
+1. `01_fund_master.csv`
+2. `02_nav_history.csv`
+3. `03_aum_by_fund_house.csv`
+4. `04_monthly_sip_inflows.csv`
+5. `05_category_inflows.csv`
+6. `06_industry_folio_count.csv`
+7. `07_scheme_performance.csv`
+8. `08_investor_transactions.csv`
+9. `09_portfolio_holdings.csv`
+10. `10_benchmark_indices.csv`
+
+## Project Structure
+
+    bluestock_mf_capstone/
+    │
+    ├── data/
+    │   ├── 01_fund_master.csv
+    │   ├── 02_nav_history.csv
+    │   ├── 03_aum_by_fund_house.csv
+    │   ├── 04_monthly_sip_inflows.csv
+    │   ├── 05_category_inflows.csv
+    │   ├── 06_industry_folio_count.csv
+    │   ├── 07_scheme_performance.csv
+    │   ├── 08_investor_transactions.csv
+    │   ├── 09_portfolio_holdings.csv
+    │   └── 10_benchmark_indices.csv
+    │
+    ├── scripts/
+    │   └── EDA_Analysis.ipynb
+    │
+    ├── reports/
+    │   ├── EDA_NAV_Trends.png
+    │   ├── EDA_NAV_Trends_2023_2024.png
+    │   ├── EDA_AUM_Growth.png
+    │   ├── EDA_SIP_Inflows.png
+    │   ├── EDA_Category_Inflows_Heatmap.png
+    │   ├── EDA_Age_Distribution.png
+    │   ├── EDA_SIP_Amount_by_Age.png
+    │   ├── EDA_Gender_Distribution.png
+    │   ├── EDA_SIP_by_State.png
+    │   ├── EDA_T30_vs_B30.png
+    │   ├── EDA_Folio_Growth.png
+    │   ├── EDA_Return_Correlation.png
+    │   ├── EDA_Sector_Allocation.png
+    │   ├── EDA_Active_SIP_Accounts.png
+    │   ├── EDA_SIP_AUM_Growth.png
+    │   └── EDA_New_SIP_Accounts.png
+    │
+    ├── requirements.txt
+    └── README.md
+
+## Exploratory Data Analysis (EDA)
+
+The EDA analyzes mutual fund performance, investor activity, fund-house AUM, SIP trends, geographic distribution, folio growth, return correlations, and portfolio sector allocation.
+
+### 1. NAV Trend Analysis
+
+Daily NAV trends were analyzed for **40 mutual fund schemes** from 2022 to 2026.
+
+The analysis includes:
+
+- Overall NAV movement across schemes
+- 2023 bull-run period
+- 2024 market-correction period
+- Differences in NAV movement between schemes
+
+Visualizations:
+
+- `EDA_NAV_Trends.png`
+- `EDA_NAV_Trends_2023_2024.png`
+
+### 2. AUM Growth by Fund House
+
+AUM growth was analyzed by fund house for the period **2022–2025**.
+
+The analysis compares yearly AUM across fund houses and highlights the strong position of **SBI**, including the ₹12.5 lakh crore dominance specified in the project requirement.
+
+Visualization:
+
+- `EDA_AUM_Growth.png`
+
+### 3. Monthly SIP Inflows
+
+Monthly SIP inflows were analyzed from **January 2022 to December 2025**.
+
+The analysis identifies the growth in SIP inflows and highlights the **December 2025 all-time high of ₹31,002 crore**.
+
+Additional SIP-related trends were also analyzed:
+
+- Active SIP accounts
+- SIP AUM
+- New SIP accounts
+
+Visualizations:
+
+- `EDA_SIP_Inflows.png`
+- `EDA_Active_SIP_Accounts.png`
+- `EDA_SIP_AUM_Growth.png`
+- `EDA_New_SIP_Accounts.png`
+
+### 4. Category-wise Inflows
+
+Monthly net inflows were analyzed across mutual fund categories.
+
+A heatmap was created to compare the intensity and variation of inflows across categories and months.
+
+Visualization:
+
+- `EDA_Category_Inflows_Heatmap.png`
+
+### 5. Investor Demographics
+
+Investor transaction data was analyzed to understand demographic characteristics.
+
+The analysis includes:
+
+- Age-group distribution
+- SIP amount distribution by age group
+- Gender distribution
+
+The **26–35 age group** represents the largest investor group in the analyzed transaction data.
+
+Visualizations:
+
+- `EDA_Age_Distribution.png`
+- `EDA_SIP_Amount_by_Age.png`
+- `EDA_Gender_Distribution.png`
+
+### 6. Geographic Distribution
+
+Investor SIP activity was analyzed across states and city tiers.
+
+The analysis includes:
+
+- Total SIP amount by state
+- T30 versus B30 city distribution
+
+The analyzed data shows a larger share of investors from **T30 cities** compared with B30 cities.
+
+Visualizations:
+
+- `EDA_SIP_by_State.png`
+- `EDA_T30_vs_B30.png`
+
+### 7. Mutual Fund Folio Growth
+
+Mutual fund folio growth was analyzed from **January 2022 to December 2025**.
+
+The total folio count increased from:
+
+- **13.26 crore** in January 2022
+- **26.12 crore** in December 2025
+
+The visualization marks these milestones on the time-series chart.
+
+Visualization:
+
+- `EDA_Folio_Growth.png`
+
+### 8. NAV Return Correlation
+
+Daily NAV returns were calculated for selected mutual fund schemes and used to create a pairwise correlation matrix.
+
+The analysis helps identify:
+
+- Funds with stronger positive relationships
+- Funds with lower correlations
+- Potential diversification patterns
+
+Visualization:
+
+- `EDA_Return_Correlation.png`
+
+### 9. Sector Allocation
+
+Portfolio holdings from equity funds were aggregated by sector.
+
+The analysis identifies the major sectors represented across the portfolio holdings.
+
+The largest aggregate sector weights include:
+
+- Banking
+- IT
+- Pharma
+- Automobile
+- Utilities
+- FMCG
+
+Visualization:
+
+- `EDA_Sector_Allocation.png`
+
+> **Note:** The sector aggregation represents the sum of holding weights across the analyzed funds and is therefore an aggregate holding-weight measure rather than a fund-size-weighted market allocation.
+
+## Key EDA Findings
+
+1. **NAV Trends:** NAV movements across the 40 analyzed schemes showed overall growth patterns during 2023, followed by varying market movements and corrections during 2024.
+
+2. **AUM Growth:** Fund-house AUM increased over the analyzed period, with SBI maintaining a strong position in the dataset.
+
+3. **SIP Inflows:** Monthly SIP inflows showed an overall increasing trend between 2022 and 2025, reaching the specified peak of ₹31,002 crore in December 2025.
+
+4. **Category Inflows:** Net inflows varied considerably across mutual fund categories and months, indicating changing investor preferences.
+
+5. **Investor Age:** The 26–35 age group formed the largest share of investors in the analyzed transaction dataset, followed by the 36–45 age group.
+
+6. **SIP Amounts:** SIP transaction amounts varied across age groups, with differences in distribution and outliers visible in the box-plot analysis.
+
+7. **Geographic Distribution:** SIP activity differed across states, while T30 cities represented a larger share of investors than B30 cities in the analyzed data.
+
+8. **Folio Growth:** Total mutual fund folios increased substantially from 13.26 crore in January 2022 to 26.12 crore in December 2025.
+
+9. **Return Correlation:** The selected mutual fund schemes showed varying levels of correlation in their daily returns, indicating differences in their movement patterns and potential diversification characteristics.
+
+10. **Sector Allocation:** Banking, IT, and Pharma were among the largest sectors by aggregate holding weight across the analyzed equity fund portfolios.
+
+## Visualizations
+
+The EDA contains **16 visualizations** covering:
+
+- NAV trends
+- NAV trends with 2023 and 2024 highlights
+- AUM growth
+- SIP inflows
+- Category-wise inflows
+- Investor age distribution
+- SIP amount by age group
+- Gender distribution
+- SIP amount by state
+- T30 versus B30 distribution
+- Folio growth
+- NAV return correlation
+- Sector allocation
+- Active SIP account growth
+- SIP AUM growth
+- New SIP account growth
 
 ## Tools & Technologies
 
 - Python
 - Pandas
 - NumPy
-- SciPy
 - Matplotlib
 - Seaborn
-- SQLite
-- SQLAlchemy
-- Jupyter Notebook / Google Colab
-- Git & GitHub
-
-## Folder Structure
-
-bluestock_mf_capstone/
-├── dashboard/
-├── data/
-│   ├── raw/
-│   │   ├── 01_fund_master.csv
-│   │   ├── 02_nav_history.csv
-│   │   └── 10_benchmark_indices.csv
-│   └── processed/
-│       ├── fund_scorecard.csv
-│       ├── alpha_beta.csv
-│       └── tracking_error.csv
-├── reports/
-│   └── benchmark_comparison.png
-├── scripts/
-│   └── Performance_Analytics.ipynb
-├── sql/
-├── bluestock_mf.db
-├── README.md
-└── requirements.txt
-
-## Data Analysis
-
-### 1. Data Cleaning & Validation
-
-The datasets were inspected and prepared for analysis by:
-
-- Standardizing date formats
-- Checking missing values
-- Checking duplicate records
-- Validating data types
-- Checking the number of mutual fund schemes
-- Validating historical NAV observations
-
-### 2. Daily Returns
-
-Daily fund returns were calculated using:
-
-Daily Return = (NAV_t / NAV_(t-1)) - 1
-
-The distribution of daily returns was also analyzed to identify unusual observations and understand return behavior across the schemes.
-
-### 3. CAGR Analysis
-
-Compound Annual Growth Rate was calculated for:
-
-- 1-year period
-- 3-year period
-- 5-year period where sufficient historical data was available
-
-The available dataset contained at least three years of observations for all 40 schemes, but did not provide five years of historical data for the complete set of schemes. Therefore, 5-year CAGR was reported as unavailable rather than estimated.
-
-Formula:
-
-CAGR = (Ending NAV / Beginning NAV)^(1 / Number of Years) - 1
-
-### 4. Sharpe Ratio
-
-The Sharpe Ratio was calculated to evaluate risk-adjusted returns.
-
-A 6.5% annual risk-free rate was used as the RBI repo-rate proxy.
-
-Sharpe Ratio = (Portfolio Return - Risk-Free Rate) / Standard Deviation
-
-The annualized ratio was used to rank the 40 schemes.
-
-### 5. Sortino Ratio
-
-The Sortino Ratio was calculated using downside deviation to focus specifically on negative/downside performance.
-
-This provides a risk-adjusted performance measure that penalizes downside volatility rather than total volatility.
-
-### 6. Alpha & Beta
-
-Fund returns were regressed against NIFTY 100 benchmark returns using Ordinary Least Squares regression.
-
-The analysis provides:
-
-- Alpha
-- Beta
-- R-squared
-
-Annualized Alpha was calculated from the regression intercept.
-
-### 7. Maximum Drawdown
-
-Maximum Drawdown was calculated using the running maximum NAV:
-
-Drawdown = NAV / Running Maximum NAV - 1
-
-The analysis identifies:
-
-- Maximum drawdown
-- Drawdown starting date
-- Drawdown ending date
-
-### 8. Fund Performance Scorecard
-
-A 0–100 composite score was created to rank the 40 mutual fund schemes.
-
-The scoring weights are:
-
-| Metric | Weight |
-|---|---:|
-| 3-Year Return | 30% |
-| Sharpe Ratio | 25% |
-| Alpha | 20% |
-| Expense Ratio | 15% |
-| Maximum Drawdown | 10% |
-
-Higher returns, Sharpe Ratio, and Alpha receive higher scores, while lower expense ratios and lower drawdown severity receive higher scores.
-
-### 9. Benchmark Comparison
-
-The top 5 funds from the performance scorecard were compared against:
-
-- NIFTY 50
-- NIFTY 100
-
-The comparison covers the available three-year period and normalizes each series to a starting value of 100.
-
-### 10. Tracking Error
-
-Tracking Error was calculated to measure the volatility of the difference between fund returns and benchmark returns.
-
-Tracking Error = Std(Fund Return - Benchmark Return) × √252
-
-The Top 5 funds were evaluated against the NIFTY 100 benchmark.
-
-## Key Deliverables
-
-### Performance Analytics
-
-- `Performance_Analytics.ipynb`
-- `fund_scorecard.csv`
-- `alpha_beta.csv`
-- `tracking_error.csv`
-- `benchmark_comparison.png`
-
-### Database & SQL Analytics
-
-- Cleaned mutual fund datasets
-- SQLite database (`bluestock_mf.db`)
-- Star schema definition
-- Analytical SQL queries
-- Data dictionary
-- Python data-cleaning script
-
-## Setup & Installation
-
-### 1. Clone the Repository
-
-    git clone https://github.com/palakkumain/bluestock_mf_capstone.git
-    cd bluestock_mf_capstone
-
-### 2. Install Dependencies
-
-    pip install -r requirements.txt
-
-### 3. Run the Performance Analytics
-
-Open:
-
-    scripts/Performance_Analytics.ipynb
-
-The notebook can be executed using Jupyter Notebook or Google Colab.
-
-### 4. Build the SQLite Database
-
-    sqlite3 bluestock_mf.db < sql/schema.sql
-
-### 5. Run Analytical SQL Queries
-
-    sqlite3 bluestock_mf.db < sql/queries.sql
-
-## Repository Outputs
-
-The repository contains:
-
-- Raw source datasets
-- Processed analytical outputs
-- Performance analytics notebook
-- Benchmark visualization
-- SQLite database
-- SQL schema and analytical queries
-- Supporting documentation
-
-## Status
-
-**Complete — ready for submission.**
+- Plotly
+- Jupyter Notebook
+- Google Colab
+- Git
+- GitHub
+
+## Deliverables
+
+The project deliverables include:
+
+- `EDA_Analysis.ipynb`
+- 16 exported PNG visualizations
+- 10 documented EDA findings
+- `README.md`
+- `requirements.txt`
 
 ## Author
 
 **Palak Kumain**
 
-BCA (AI & Data Science)  
-Graphic Era Hill University
+Data Analyst Intern  
+**BlueStock Fintech**

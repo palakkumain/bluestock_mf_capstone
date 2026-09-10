@@ -1,90 +1,139 @@
-#  Task 1: Clean NAV History  
+"""
+Data Cleaning Pipeline
 
+Cleans the main Bluestock Mutual Fund datasets:
+- NAV history
+- Investor transactions
+- Scheme performance
+
+Cleaned files are saved to data/processed/.
+"""
+
+from pathlib import Path
 
 import pandas as pd
-import os
 
-RAW = "data/raw"
-OUT = "data/processed"
 
-os.makedirs(OUT, exist_ok=True)
+# Project directories
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+RAW_DIR = PROJECT_ROOT / "data" / "raw"
+PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
-# Read NAV file
-nav = pd.read_csv(f"{RAW}/1788499983331-4389156d-02_nav_history.csv")
 
-# Convert date
-nav["date"] = pd.to_datetime(nav["date"], errors="coerce")
+def find_file(prefix):
+    """Find a raw CSV file using its dataset prefix."""
+    matches = list(RAW_DIR.glob(f"*{prefix}*.csv"))
 
-# Sort by fund and date
-nav = nav.sort_values(["amfi_code", "date"])
+    if not matches:
+        raise FileNotFoundError(
+            f"No raw CSV file found for dataset: {prefix}"
+        )
 
-# Forward fill missing NAV values
-nav["nav"] = nav.groupby("amfi_code")["nav"].ffill()
+    return matches[0]
 
-# Remove duplicate rows
-nav = nav.drop_duplicates()
 
-# Keep only positive NAV values
-nav = nav[nav["nav"] > 0]
+def clean_nav_history():
+    """Clean NAV history data."""
+    file_path = find_file("02_nav_history")
+    nav = pd.read_csv(file_path)
 
-# Save cleaned file
-nav.to_csv(f"{OUT}/02_nav_history_clean.csv", index=False)
+    nav["date"] = pd.to_datetime(nav["date"], errors="coerce")
+    nav = nav.sort_values(["amfi_code", "date"])
 
-print("Done! Cleaned rows:", len(nav))
+    # Forward-fill missing NAV values within each fund
+    nav["nav"] = nav.groupby("amfi_code")["nav"].ffill()
 
-#  Task 2: Clean Investor Transactions 
+    nav = nav.drop_duplicates()
+    nav = nav[nav["nav"] > 0]
 
-tx = pd.read_csv(f"{RAW}/1788499980509-304c1255-08_investor_transactions.csv")
+    output_path = PROCESSED_DIR / "02_nav_history_clean.csv"
+    nav.to_csv(output_path, index=False)
 
-# Convert date format
-tx["transaction_date"] = pd.to_datetime(tx["transaction_date"], errors="coerce")
+    print(f"✓ NAV history cleaned: {len(nav):,} rows")
 
-# Standardize transaction types
-tx["transaction_type"] = tx["transaction_type"].str.strip().str.title()
 
-tx["transaction_type"] = tx["transaction_type"].replace({
-    "Sip": "SIP",
-    "Lump Sum": "Lumpsum",
-    "Redeem": "Redemption"
-})
+def clean_investor_transactions():
+    """Clean investor transaction data."""
+    file_path = find_file("08_investor_transactions")
+    tx = pd.read_csv(file_path)
 
-# Keep only positive amounts
-tx = tx[tx["amount_inr"] > 0]
+    tx["transaction_date"] = pd.to_datetime(
+        tx["transaction_date"],
+        errors="coerce"
+    )
 
-# Fix KYC values
-tx["kyc_status"] = tx["kyc_status"].replace({
-    "verified": "Verified",
-    "pending": "Pending"
-})
+    tx["transaction_type"] = (
+        tx["transaction_type"]
+        .astype(str)
+        .str.strip()
+        .str.title()
+    )
 
-# Save cleaned file
-tx.to_csv(f"{OUT}/08_investor_transactions_clean.csv", index=False)
+    tx["transaction_type"] = tx["transaction_type"].replace({
+        "Sip": "SIP",
+        "Lump Sum": "Lumpsum",
+        "Redeem": "Redemption"
+    })
 
-print("Transactions cleaned:", len(tx))
+    tx = tx[tx["amount_inr"] > 0]
 
-#  Task 3: Clean Scheme Performance 
+    tx["kyc_status"] = (
+        tx["kyc_status"]
+        .astype(str)
+        .str.strip()
+        .str.title()
+    )
 
-perf = pd.read_csv(f"{RAW}/1788499985420-bb134abf-07_scheme_performance.csv")
+    output_path = PROCESSED_DIR / "08_investor_transactions_clean.csv"
+    tx.to_csv(output_path, index=False)
 
-# Convert numeric columns
-cols = [
-    "return_1yr_pct",
-    "return_3yr_pct",
-    "return_5yr_pct",
-    "sharpe_ratio",
-    "expense_ratio_pct"
-]
+    print(f"✓ Investor transactions cleaned: {len(tx):,} rows")
 
-for c in cols:
-    perf[c] = pd.to_numeric(perf[c], errors="coerce")
 
-# Flag negative Sharpe ratios
-perf["negative_sharpe"] = perf["sharpe_ratio"] < 0
+def clean_scheme_performance():
+    """Clean scheme performance data."""
+    file_path = find_file("07_scheme_performance")
+    perf = pd.read_csv(file_path)
 
-# Flag expense ratios outside 0.1–2.5%
-perf["expense_issue"] = ~perf["expense_ratio_pct"].between(0.1, 2.5)
+    numeric_columns = [
+        "return_1yr_pct",
+        "return_3yr_pct",
+        "return_5yr_pct",
+        "sharpe_ratio",
+        "expense_ratio_pct"
+    ]
 
-# Save cleaned file
-perf.to_csv(f"{OUT}/07_scheme_performance_clean.csv", index=False)
+    for column in numeric_columns:
+        perf[column] = pd.to_numeric(
+            perf[column],
+            errors="coerce"
+        )
 
-print("Performance cleaned:", len(perf))
+    # Quality flags
+    perf["negative_sharpe"] = perf["sharpe_ratio"] < 0
+
+    perf["expense_issue"] = ~perf[
+        "expense_ratio_pct"
+    ].between(0.1, 2.5)
+
+    output_path = PROCESSED_DIR / "07_scheme_performance_clean.csv"
+    perf.to_csv(output_path, index=False)
+
+    print(f"✓ Scheme performance cleaned: {len(perf):,} rows")
+
+
+def main():
+    """Run all dataset cleaning tasks."""
+    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+
+    print("\nStarting data cleaning...\n")
+
+    clean_nav_history()
+    clean_investor_transactions()
+    clean_scheme_performance()
+
+    print("\n✓ Data cleaning completed successfully.")
+
+
+if __name__ == "__main__":
+    main()
